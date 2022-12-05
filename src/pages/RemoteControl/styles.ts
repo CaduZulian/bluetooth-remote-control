@@ -23,6 +23,8 @@ export const RotationPosition = styled.View`
   height: 100%;
   width: 4px;
   background-color: #00ff00;
+
+  transition: all 0.2s ease-in;
 `;
 
 export const ButtonsGroup = styled.View`

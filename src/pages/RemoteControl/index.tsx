@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { Button, View, Pressable, Text } from 'react-native';
 import { LANDSCAPE, OrientationLocker } from 'react-native-orientation-locker';
 import { accelerometer, setUpdateIntervalForType, SensorTypes } from 'react-native-sensors';
+import Toast from 'react-native-toast-message';
+
+import BluetoothSerialDefault from 'react-native-bluetooth-serial'
 
 import {
   Container,
@@ -12,6 +15,8 @@ import {
 
 
 export default function RemoteControl() {
+  const BluetoothSerial: any = BluetoothSerialDefault
+
   const [rotation, setRotation] = useState(0);
 
   const [popupsHeadlightsIsOn, setPopupsHeadlightsIsOn] = useState(false)
@@ -26,6 +31,36 @@ export default function RemoteControl() {
     })
   }, [])
 
+  function writeData(data: any) {
+    BluetoothSerial.write(data).then((result: any) => {
+      Toast.show({
+        type: "success",
+        text1: "Dados enviados",
+      })
+    }).catch((err: any) => {
+      console.log(err)
+      Toast.show({
+        type: "error",
+        text1: "Dados não enviados",
+      })
+    })
+  }
+
+  useEffect(() => {
+    BluetoothSerial.isConnected().then((result: boolean) => {
+      console.log(result)
+    })
+
+    return () => {
+      Toast.show({
+        type: "info",
+        text1: "Dispositivo desconectado",
+      })
+
+      BluetoothSerial.disconnect()
+    }
+  }, [BluetoothSerial])
+
   return (
     <Container>
       <OrientationLocker orientation={LANDSCAPE} />
@@ -39,7 +74,10 @@ export default function RemoteControl() {
           <Button
             color={popupsHeadlightsIsOn ? "#0614AE" : "#afafaf"}
             title="Popups"
-            onPress={() => setPopupsHeadlightsIsOn(!popupsHeadlightsIsOn)}
+            onPress={() => {
+              writeData('popups')
+              setPopupsHeadlightsIsOn(!popupsHeadlightsIsOn)
+            }}
           />
 
           <Button
