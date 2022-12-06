@@ -1,54 +1,54 @@
 import React, { useEffect, useState } from 'react'
-import { Button, View, Pressable, Text } from 'react-native';
-import { LANDSCAPE, OrientationLocker } from 'react-native-orientation-locker';
-import { accelerometer, setUpdateIntervalForType, SensorTypes } from 'react-native-sensors';
 import Toast from 'react-native-toast-message';
-
 import BluetoothSerialDefault from 'react-native-bluetooth-serial'
+import { LANDSCAPE, OrientationLocker } from 'react-native-orientation-locker';
+import { accelerometer } from 'react-native-sensors';
 
-import {
-  Container,
-  RotationBar,
-  RotationPosition,
-  ButtonsGroup,
-} from "./styles";
+// icons
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
+// native components
+import { Pressable } from 'react-native';
 
-export default function RemoteControl() {
+// styled components
+import { Container } from "./styles";
+
+// components
+import { ModalOptions } from './components/ModalOptions';
+
+// pages
+import { ButtonPage } from './pages/Button';
+import { NoButtonPage } from './pages/NoButton';
+
+export default function RemoteControl({ navigation }: any) {
   const BluetoothSerial: any = BluetoothSerialDefault
 
   const [rotation, setRotation] = useState(0);
+
+  const [optionsIsOpen, setOptionsIsOpen] = useState(false)
+  const [currentPage, setCurrentPage] = useState<"noButton" | "button">('noButton')
 
   const [popupsHeadlightsIsOn, setPopupsHeadlightsIsOn] = useState(false)
   const [headlightIsOn, setHeadlightIsOn] = useState(false)
   const [arrowsIsOn, setArrowsIsOn] = useState(false)
 
-  setUpdateIntervalForType(SensorTypes.accelerometer, 100); // defaults to 100ms
+  const [command, setCommand] = useState('')
 
   useEffect(() => {
-    accelerometer.subscribe(({ y }) => {
-      setRotation(y)
+    navigation.setOptions({
+      headerRight: () => (
+        <Pressable onPressIn={() => setOptionsIsOpen(!optionsIsOpen)}>
+          <SimpleLineIcons name="options-vertical" size={20} />
+        </Pressable>
+      )
     })
   }, [])
 
-  function writeData(data: any) {
-    BluetoothSerial.write(data).then((result: any) => {
-      Toast.show({
-        type: "success",
-        text1: "Dados enviados",
-      })
-    }).catch((err: any) => {
-      console.log(err)
-      Toast.show({
-        type: "error",
-        text1: "Dados não enviados",
-      })
-    })
-  }
-
   useEffect(() => {
     BluetoothSerial.isConnected().then((result: boolean) => {
-      console.log(result)
+      // if(!result) {
+      //   navigation.goBack()
+      // }
     })
 
     return () => {
@@ -61,57 +61,94 @@ export default function RemoteControl() {
     }
   }, [BluetoothSerial])
 
+  useEffect(() => {
+    let subscription: any
+
+    if (currentPage === 'noButton') {
+      subscription = accelerometer.subscribe(({ y }) => {
+        setRotation(y)
+      })
+    } else if (subscription) {
+      subscription.unsubscribe()
+    }
+
+    return () => {
+      if(subscription) {
+        subscription.unsubscribe()
+      }
+    }
+  }, [currentPage])
+
+  useEffect(() => {
+    if (rotation < -0.5) {
+      setCommand('goLeft')
+    } else if (rotation > 0.5) {
+      setCommand('goRight')
+    } else {
+      setCommand('stopSteering')
+    }
+  }, [rotation])
+
+  useEffect(() => {
+    if (command) {
+      BluetoothSerial.write(command).then((result: any) => {
+        Toast.show({
+          type: "success",
+          text1: "Dados enviados",
+          text2: command
+        })
+      }).catch((err: any) => {
+        Toast.show({
+          type: "error",
+          text1: "Dados não enviados",
+          text2: err
+        })
+      })
+    }
+  }, [command])
+
+  function renderCurrentPage() {
+    switch (currentPage) {
+      case 'button': {
+        return (
+          <ButtonPage
+
+          />
+        )
+      }
+      case 'noButton': {
+        return (
+          <NoButtonPage
+            rotation={rotation}
+            popupsHeadlightsIsOn={popupsHeadlightsIsOn}
+            headlightIsOn={headlightIsOn}
+            arrowsIsOn={arrowsIsOn}
+            setPopupsHeadlightsIsOn={setPopupsHeadlightsIsOn}
+            setHeadlightIsOn={setHeadlightIsOn}
+            setArrowsIsOn={setArrowsIsOn}
+            setCommand={setCommand}
+          />
+        )
+      }
+
+      default: {
+        return <></>
+      }
+    }
+  }
+
   return (
     <Container>
       <OrientationLocker orientation={LANDSCAPE} />
-      <RotationBar>
-        <RotationPosition style={{ backgroundColor: '#ff0000', position: 'absolute' }} />
-        <RotationPosition style={{ marginLeft: `${rotation * 10}%` }} />
-      </RotationBar>
 
-      <View style={{ width: '100%', alignItems: 'center' }}>
-        <ButtonsGroup>
-          <Button
-            color={popupsHeadlightsIsOn ? "#0614AE" : "#afafaf"}
-            title="Popups"
-            onPress={() => {
-              writeData('popups')
-              setPopupsHeadlightsIsOn(!popupsHeadlightsIsOn)
-            }}
-          />
+      {renderCurrentPage()}
 
-          <Button
-            color={headlightIsOn ? "#0614AE" : "#afafaf"}
-            title="Luzes"
-            onPress={() => setHeadlightIsOn(!headlightIsOn)}
-          />
-
-          <Button
-            color={arrowsIsOn ? "#0614AE" : "#afafaf"}
-            title="Lanternas"
-            onPress={() => setArrowsIsOn(!arrowsIsOn)}
-          />
-        </ButtonsGroup>
-      </View>
-
-      <View style={{ height: '100%', width: '100%', alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Pressable
-          style={{ width: '48%', height: '60%', backgroundColor: '#00ff00' }}
-          onPress={() => console.warn('frente')}
-        >
-          <Text>
-            pra frente
-          </Text>
-        </Pressable>
-        <Pressable
-          style={{ width: '48%', height: '60%', backgroundColor: '#00ff00' }}
-          onPress={() => console.warn('ré')}
-        >
-          <Text>
-            pra trás
-          </Text>
-        </Pressable>
-      </View>
+      <ModalOptions
+        open={optionsIsOpen}
+        onClose={() => setOptionsIsOpen(false)}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+      />
     </Container>
   )
 }

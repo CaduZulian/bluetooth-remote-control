@@ -1,4 +1,3 @@
-import { css } from "styled-components";
 import styled from "styled-components/native";
 
 export const Container = styled.View`
@@ -8,6 +7,7 @@ export const Container = styled.View`
   padding: 16px;
 
   align-items: center;
+  justify-content: space-between;
 `;
 
 export const RotationBar = styled.View`
@@ -32,3 +32,21 @@ export const ButtonsGroup = styled.View`
   justify-content: space-between;
   min-width: 250px;
 `;
+
+export const DirectionContainer = styled.View`
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+
+  width: 100%;
+`
+
+export const DirectionButton = styled.TouchableHighlight`
+  align-items: center;
+  justify-content: center;
+
+  height: 100%;
+  width: 48%;
+
+  background-color: #DDDDDD;
+`
