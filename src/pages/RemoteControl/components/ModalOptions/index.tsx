@@ -1,8 +1,10 @@
+import ReactNativeModal from 'react-native-modal';
+
 // icons
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 
 // native components
-import { Modal, View } from 'react-native'
+import { View } from 'react-native'
 
 // styled components
 import {
@@ -22,10 +24,10 @@ interface ModalOptionsProps {
 
 export const ModalOptions: React.FC<ModalOptionsProps> = ({ open, onClose, currentPage, setCurrentPage }) => {
   return (
-    <Modal
-      animationType="fade"
-      transparent={true}
-      visible={open}
+    <ReactNativeModal
+      isVisible={open}
+      animationIn='fadeIn'
+      animationOut='fadeOut'
     >
       <ModalContainer>
         <ModalView>
@@ -38,6 +40,7 @@ export const ModalOptions: React.FC<ModalOptionsProps> = ({ open, onClose, curre
               name="close"
               size={20}
               onPress={() => onClose()}
+              color={'#111'}
             />
           </View>
 
@@ -94,6 +97,6 @@ export const ModalOptions: React.FC<ModalOptionsProps> = ({ open, onClose, curre
           </ModalButton>
         </ModalView>
       </ModalContainer>
-    </Modal>
+    </ReactNativeModal>
   )
 }

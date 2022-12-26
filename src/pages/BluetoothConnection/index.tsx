@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import BluetoothSerialDefault from 'react-native-bluetooth-serial'
+import BluetoothSerialDefault from 'react-native-bluetooth-serial-v2'
 import { OrientationLocker, PORTRAIT } from 'react-native-orientation-locker'
 import Toast from 'react-native-toast-message'
 
@@ -156,7 +156,9 @@ export default function BluetoothConnections({ navigation }: any) {
         type: "success",
         text1: `Dispositivos pareados com sucesso!`
       })
-      navigation.navigate('RemoteControl')
+      navigation.navigate('RemoteControl', {
+        deviceName: name
+      })
     }).catch((err: any) => {
       Toast.show({
         type: "error",

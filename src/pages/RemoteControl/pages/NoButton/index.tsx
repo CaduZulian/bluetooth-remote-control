@@ -5,7 +5,13 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import { View, Button } from 'react-native'
 
 // styled components
-import { ButtonsGroup, DirectionButton, DirectionContainer, RotationBar, RotationPosition } from '../../styles'
+import {
+  ButtonsGroup,
+  DirectionButton,
+  DirectionContainer,
+  RotationBar,
+  RotationPosition
+} from '../../styles'
 
 interface NoButtonPageProps {
   rotation: number;
@@ -68,6 +74,7 @@ export const NoButtonPage: React.FC<NoButtonPageProps> = ({
 
       <DirectionContainer>
         <DirectionButton
+          style={{ marginRight: 32 }}
           underlayColor='#B0B0B0'
           onPress={() => setCommand('stop')}
           onShowUnderlay={() => setCommand('goForward')}

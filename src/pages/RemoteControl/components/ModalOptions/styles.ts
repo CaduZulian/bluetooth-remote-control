@@ -2,10 +2,13 @@ import styled from "styled-components/native";
 
 export const ModalContainer = styled.View`
   align-items: flex-end;
-`
+  flex: 1;
+  margin-right: -5%;
+  margin-top: -5%;
+  `
 
 export const ModalView = styled.View`
-  width: 30%;
+  width: 32%;
   background-color: #fff;
   border: 1px solid #DDDDDD;
 

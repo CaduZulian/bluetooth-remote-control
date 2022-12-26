@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import Toast from 'react-native-toast-message';
-import BluetoothSerialDefault from 'react-native-bluetooth-serial'
+import BluetoothSerialDefault from 'react-native-bluetooth-serial-v2'
 import { LANDSCAPE, OrientationLocker } from 'react-native-orientation-locker';
-import { accelerometer } from 'react-native-sensors';
+import { accelerometer, SensorTypes, setUpdateIntervalForType } from 'react-native-sensors';
 
 // icons
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
@@ -20,8 +20,9 @@ import { ModalOptions } from './components/ModalOptions';
 import { ButtonPage } from './pages/Button';
 import { NoButtonPage } from './pages/NoButton';
 
-export default function RemoteControl({ navigation }: any) {
+export default function RemoteControl({ navigation, route }: any) {
   const BluetoothSerial: any = BluetoothSerialDefault
+  const { deviceName } = route.params
 
   const [rotation, setRotation] = useState(0);
 
@@ -33,22 +34,28 @@ export default function RemoteControl({ navigation }: any) {
   const [arrowsIsOn, setArrowsIsOn] = useState(false)
 
   const [command, setCommand] = useState('')
+  const [directionalCommand, setDirectionalCommand] = useState('')
+
+  setUpdateIntervalForType(SensorTypes.accelerometer, 500); // defaults to 100ms
 
   useEffect(() => {
     navigation.setOptions({
-      headerRight: () => (
-        <Pressable onPressIn={() => setOptionsIsOpen(!optionsIsOpen)}>
-          <SimpleLineIcons name="options-vertical" size={20} />
-        </Pressable>
-      )
+      title: `Controle Remoto - ${deviceName}`,
+      headerRight: () => {
+        return (
+          <Pressable onPressIn={() => setOptionsIsOpen(!optionsIsOpen)}>
+            <SimpleLineIcons name="options-vertical" size={20} color={'#111'}/>
+          </Pressable>
+        )
+      }
     })
   }, [])
 
   useEffect(() => {
     BluetoothSerial.isConnected().then((result: boolean) => {
-      // if(!result) {
-      //   navigation.goBack()
-      // }
+      if (!result) {
+        navigation.goBack()
+      }
     })
 
     return () => {
@@ -67,52 +74,67 @@ export default function RemoteControl({ navigation }: any) {
     if (currentPage === 'noButton') {
       subscription = accelerometer.subscribe(({ y }) => {
         setRotation(y)
+
+        if (y < -0.5 && directionalCommand !== 'goLeft') {
+          setDirectionalCommand('goLeft')
+        } else if (y > 0.5 && directionalCommand !== 'goRight') {
+          setDirectionalCommand('goRight')
+        } else if (directionalCommand !== 'stopSteering') {
+          setDirectionalCommand('stopSteering')
+        }
       })
     } else if (subscription) {
       subscription.unsubscribe()
     }
 
     return () => {
-      if(subscription) {
+      if (subscription) {
         subscription.unsubscribe()
       }
     }
   }, [currentPage])
 
-  useEffect(() => {
-    if (rotation < -0.5) {
-      setCommand('goLeft')
-    } else if (rotation > 0.5) {
-      setCommand('goRight')
-    } else {
-      setCommand('stopSteering')
-    }
-  }, [rotation])
+  function writeData(command: string) {
+    BluetoothSerial.write(command).then((result: any) => {
+      Toast.show({
+        type: "success",
+        text1: "Dados enviados",
+        text2: command
+      })
+    }).catch((err: any) => {
+      Toast.show({
+        type: "error",
+        text1: "Dados não enviados",
+        text2: err
+      })
+    })
+  }
 
   useEffect(() => {
     if (command) {
-      BluetoothSerial.write(command).then((result: any) => {
-        Toast.show({
-          type: "success",
-          text1: "Dados enviados",
-          text2: command
-        })
-      }).catch((err: any) => {
-        Toast.show({
-          type: "error",
-          text1: "Dados não enviados",
-          text2: err
-        })
-      })
+      writeData(command)
     }
   }, [command])
+
+  useEffect(() => {
+    if (directionalCommand) {
+      writeData(directionalCommand)
+    }
+  }, [directionalCommand])
 
   function renderCurrentPage() {
     switch (currentPage) {
       case 'button': {
         return (
           <ButtonPage
-
+            popupsHeadlightsIsOn={popupsHeadlightsIsOn}
+            headlightIsOn={headlightIsOn}
+            arrowsIsOn={arrowsIsOn}
+            setPopupsHeadlightsIsOn={setPopupsHeadlightsIsOn}
+            setHeadlightIsOn={setHeadlightIsOn}
+            setArrowsIsOn={setArrowsIsOn}
+            setCommand={setCommand}
+            setDirectionalCommand={setDirectionalCommand}
           />
         )
       }

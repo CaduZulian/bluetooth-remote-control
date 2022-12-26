@@ -285,5 +285,9 @@ export function BluetoothIcon(currentClass: number) {
       // WEARABLE_WRIST_WATCH 
       return <MaterialIcons name="watch" size={30} color="#4F8EF7" />
     }
+
+    default: {
+      return <MaterialIcons name="bluetooth" size={30} color="#4F8EF7" />
+    }
   }
 }
