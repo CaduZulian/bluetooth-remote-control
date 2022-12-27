@@ -101,13 +101,7 @@ export default function RemoteControl({ navigation, route }: any) {
   }, [currentPage])
 
   function writeData(command: string) {
-    BluetoothSerial.write(command).then((result: any) => {
-      Toast.show({
-        type: "success",
-        text1: "Dados enviados",
-        text2: command
-      })
-    }).catch((err: any) => {
+    BluetoothSerial.write(command).catch((err: any) => {
       Toast.show({
         type: "error",
         text1: "Dados não enviados",
