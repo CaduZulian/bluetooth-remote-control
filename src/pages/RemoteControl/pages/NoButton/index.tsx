@@ -13,6 +13,18 @@ import {
   RotationPosition
 } from '../../styles'
 
+import { 
+  arrowsOff, 
+  arrowsOn, 
+  goBack, 
+  goForward, 
+  headlightOff, 
+  headlightOn, 
+  popupsOff, 
+  popupsOn, 
+  stop 
+} from '../../../../constants/commands'
+
 interface NoButtonPageProps {
   rotation: number;
   popupsHeadlightsIsOn: boolean;
@@ -48,7 +60,7 @@ export const NoButtonPage: React.FC<NoButtonPageProps> = ({
             title="Popups"
             onPress={() => {
               setPopupsHeadlightsIsOn(!popupsHeadlightsIsOn)
-              setCommand(!popupsHeadlightsIsOn ? "popupsOn" : "popupsOff")
+              setCommand(!popupsHeadlightsIsOn ? popupsOn : popupsOff)
             }}
           />
 
@@ -57,7 +69,7 @@ export const NoButtonPage: React.FC<NoButtonPageProps> = ({
             title="Luzes"
             onPress={() => {
               setHeadlightIsOn(!headlightIsOn)
-              setCommand(!headlightIsOn ? "headlightOn" : "headlightOff")
+              setCommand(!headlightIsOn ? headlightOn : headlightOff)
             }}
           />
 
@@ -66,7 +78,7 @@ export const NoButtonPage: React.FC<NoButtonPageProps> = ({
             title="Lanternas"
             onPress={() => {
               setArrowsIsOn(!arrowsIsOn)
-              setCommand(!arrowsIsOn ? "arrowsOn" : "arrowsOff")
+              setCommand(!arrowsIsOn ? arrowsOn : arrowsOff)
             }}
           />
         </ButtonsGroup>
@@ -76,16 +88,16 @@ export const NoButtonPage: React.FC<NoButtonPageProps> = ({
         <DirectionButton
           style={{ marginRight: 32 }}
           underlayColor='#B0B0B0'
-          onPress={() => setCommand('stop')}
-          onShowUnderlay={() => setCommand('goForward')}
+          onPress={() => setCommand(stop)}
+          onShowUnderlay={() => setCommand(goForward)}
         >
           <MaterialIcons name="arrow-drop-up" size={30} />
         </DirectionButton>
 
         <DirectionButton
           underlayColor='#B0B0B0'
-          onPress={() => setCommand('stop')}
-          onShowUnderlay={() => setCommand('goBack')}
+          onPress={() => setCommand(stop)}
+          onShowUnderlay={() => setCommand(goBack)}
         >
           <MaterialIcons name="arrow-drop-down" size={30} />
         </DirectionButton>

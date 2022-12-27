@@ -20,6 +20,12 @@ import { ModalOptions } from './components/ModalOptions';
 import { ButtonPage } from './pages/Button';
 import { NoButtonPage } from './pages/NoButton';
 
+import {
+  goLeft,
+  goRight,
+  stopSteering
+} from '../../constants/commands';
+
 export default function RemoteControl({ navigation, route }: any) {
   const BluetoothSerial: any = BluetoothSerialDefault
   const { deviceName } = route.params
@@ -36,7 +42,7 @@ export default function RemoteControl({ navigation, route }: any) {
   const [command, setCommand] = useState('')
   const [directionalCommand, setDirectionalCommand] = useState('')
 
-  setUpdateIntervalForType(SensorTypes.accelerometer, 500); // defaults to 100ms
+  setUpdateIntervalForType(SensorTypes.accelerometer, 350); // defaults to 100ms
 
   useEffect(() => {
     navigation.setOptions({
@@ -44,7 +50,7 @@ export default function RemoteControl({ navigation, route }: any) {
       headerRight: () => {
         return (
           <Pressable onPressIn={() => setOptionsIsOpen(!optionsIsOpen)}>
-            <SimpleLineIcons name="options-vertical" size={20} color={'#111'}/>
+            <SimpleLineIcons name="options-vertical" size={20} color={'#111'} />
           </Pressable>
         )
       }
@@ -76,11 +82,11 @@ export default function RemoteControl({ navigation, route }: any) {
         setRotation(y)
 
         if (y < -0.5 && directionalCommand !== 'goLeft') {
-          setDirectionalCommand('goLeft')
+          setDirectionalCommand(goLeft)
         } else if (y > 0.5 && directionalCommand !== 'goRight') {
-          setDirectionalCommand('goRight')
+          setDirectionalCommand(goRight)
         } else if (directionalCommand !== 'stopSteering') {
-          setDirectionalCommand('stopSteering')
+          setDirectionalCommand(stopSteering)
         }
       })
     } else if (subscription) {

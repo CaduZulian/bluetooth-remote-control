@@ -12,6 +12,21 @@ import {
   DirectionItem
 } from '../../styles'
 
+import {
+  arrowsOff,
+  arrowsOn,
+  goBack,
+  goForward,
+  goLeft,
+  goRight,
+  headlightOff,
+  headlightOn,
+  popupsOff,
+  popupsOn,
+  stop,
+  stopSteering
+} from '../../../../constants/commands';
+
 interface ButtonPageProps {
   popupsHeadlightsIsOn: boolean;
   headlightIsOn: boolean;
@@ -42,7 +57,7 @@ export const ButtonPage: React.FC<ButtonPageProps> = ({
             title="Popups"
             onPress={() => {
               setPopupsHeadlightsIsOn(!popupsHeadlightsIsOn)
-              setCommand(!popupsHeadlightsIsOn ? "popupsOn" : "popupsOff")
+              setCommand(!popupsHeadlightsIsOn ? popupsOn : popupsOff)
             }}
           />
 
@@ -51,7 +66,7 @@ export const ButtonPage: React.FC<ButtonPageProps> = ({
             title="Luzes"
             onPress={() => {
               setHeadlightIsOn(!headlightIsOn)
-              setCommand(!headlightIsOn ? "headlightOn" : "headlightOff")
+              setCommand(!headlightIsOn ? headlightOn : headlightOff)
             }}
           />
 
@@ -60,7 +75,7 @@ export const ButtonPage: React.FC<ButtonPageProps> = ({
             title="Lanternas"
             onPress={() => {
               setArrowsIsOn(!arrowsIsOn)
-              setCommand(!arrowsIsOn ? "arrowsOn" : "arrowsOff")
+              setCommand(!arrowsIsOn ? arrowsOn : arrowsOff)
             }}
           />
         </ButtonsGroup>
@@ -71,8 +86,8 @@ export const ButtonPage: React.FC<ButtonPageProps> = ({
           <DirectionButton
             style={{ width: "100%", height: "100%", marginBottom: 16 }}
             underlayColor='#B0B0B0'
-            onPress={() => setCommand('stop')}
-            onShowUnderlay={() => setCommand('goForward')}
+            onPress={() => setCommand(stop)}
+            onShowUnderlay={() => setCommand(goForward)}
           >
             <MaterialIcons name="arrow-drop-up" size={30} />
           </DirectionButton>
@@ -80,8 +95,8 @@ export const ButtonPage: React.FC<ButtonPageProps> = ({
           <DirectionButton
             style={{ width: "100%", height: "100%" }}
             underlayColor='#B0B0B0'
-            onPress={() => setCommand('stop')}
-            onShowUnderlay={() => setCommand('goBack')}
+            onPress={() => setCommand(stop)}
+            onShowUnderlay={() => setCommand(goBack)}
           >
             <MaterialIcons name="arrow-drop-down" size={30} />
           </DirectionButton>
@@ -93,8 +108,8 @@ export const ButtonPage: React.FC<ButtonPageProps> = ({
           <DirectionButton
             style={{ height: "60%", marginRight: 16 }}
             underlayColor='#B0B0B0'
-            onPress={() => setDirectionalCommand('stopSteering')}
-            onShowUnderlay={() => setDirectionalCommand('goLeft')}
+            onPress={() => setDirectionalCommand(stopSteering)}
+            onShowUnderlay={() => setDirectionalCommand(goLeft)}
           >
             <MaterialIcons name="arrow-left" size={30} />
           </DirectionButton>
@@ -102,8 +117,8 @@ export const ButtonPage: React.FC<ButtonPageProps> = ({
           <DirectionButton
             style={{ height: "60%" }}
             underlayColor='#B0B0B0'
-            onPress={() => setDirectionalCommand('stopSteering')}
-            onShowUnderlay={() => setDirectionalCommand('goRight')}
+            onPress={() => setDirectionalCommand(stopSteering)}
+            onShowUnderlay={() => setDirectionalCommand(goRight)}
           >
             <MaterialIcons name="arrow-right" size={30} />
           </DirectionButton>
