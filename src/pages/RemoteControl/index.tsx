@@ -1,126 +1,128 @@
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState} from 'react';
 import Toast from 'react-native-toast-message';
-import BluetoothSerialDefault from 'react-native-bluetooth-serial-v2'
-import { LANDSCAPE, OrientationLocker } from 'react-native-orientation-locker';
-import { accelerometer, SensorTypes, setUpdateIntervalForType } from 'react-native-sensors';
+import BluetoothSerialDefault from 'react-native-bluetooth-serial-v2';
+import {LANDSCAPE, OrientationLocker} from 'react-native-orientation-locker';
+import {
+  accelerometer,
+  SensorTypes,
+  setUpdateIntervalForType,
+} from 'react-native-sensors';
 
 // icons
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 
 // native components
-import { Pressable } from 'react-native';
+import {Pressable} from 'react-native';
 
 // styled components
-import { Container } from "./styles";
+import {Container} from './styles';
 
 // components
-import { ModalOptions } from './components/ModalOptions';
+import {ModalOptions} from './components/ModalOptions';
 
 // pages
-import { ButtonPage } from './pages/Button';
-import { NoButtonPage } from './pages/NoButton';
+import {ButtonPage} from './pages/Button';
+import {NoButtonPage} from './pages/NoButton';
 
-import {
-  goLeft,
-  goRight,
-  stopSteering
-} from '../../constants/commands';
+import {goLeft, goRight, stopSteering} from '../../constants/commands';
 
-export default function RemoteControl({ navigation, route }: any) {
-  const BluetoothSerial: any = BluetoothSerialDefault
-  const { deviceName } = route.params
+export default function RemoteControl({navigation, route}: any) {
+  const BluetoothSerial: any = BluetoothSerialDefault;
+  const props = route.params;
 
   const [rotation, setRotation] = useState(0);
 
-  const [optionsIsOpen, setOptionsIsOpen] = useState(false)
-  const [currentPage, setCurrentPage] = useState<"noButton" | "button">('noButton')
+  const [optionsIsOpen, setOptionsIsOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState<'noButton' | 'button'>(
+    'noButton',
+  );
 
-  const [popupsHeadlightsIsOn, setPopupsHeadlightsIsOn] = useState(false)
-  const [headlightIsOn, setHeadlightIsOn] = useState(false)
-  const [arrowsIsOn, setArrowsIsOn] = useState(false)
+  const [popupsHeadlightsIsOn, setPopupsHeadlightsIsOn] = useState(false);
+  const [headlightIsOn, setHeadlightIsOn] = useState(false);
+  const [arrowsIsOn, setArrowsIsOn] = useState(false);
 
-  const [command, setCommand] = useState('')
-  const [directionalCommand, setDirectionalCommand] = useState('')
+  const [command, setCommand] = useState('');
+  const [directionalCommand, setDirectionalCommand] = useState('');
 
   setUpdateIntervalForType(SensorTypes.accelerometer, 350); // defaults to 100ms
 
   useEffect(() => {
     navigation.setOptions({
-      title: `Controle Remoto - ${deviceName}`,
+      title: `Controle Remoto - ${props?.deviceName}`,
       headerRight: () => {
         return (
           <Pressable onPressIn={() => setOptionsIsOpen(!optionsIsOpen)}>
             <SimpleLineIcons name="options-vertical" size={20} color={'#111'} />
           </Pressable>
-        )
-      }
-    })
-  }, [])
+        );
+      },
+    });
+  }, []);
 
   useEffect(() => {
     BluetoothSerial.isConnected().then((result: boolean) => {
       if (!result) {
         navigation.goBack()
       }
-    })
+    });
 
     return () => {
       Toast.show({
-        type: "info",
-        text1: "Dispositivo desconectado",
-      })
+        type: 'info',
+        text1: 'Dispositivo desconectado',
+      });
 
-      BluetoothSerial.disconnect()
-    }
-  }, [BluetoothSerial])
+      BluetoothSerial.disconnect();
+    };
+  }, [BluetoothSerial]);
 
   useEffect(() => {
-    let subscription: any
+    let subscription: any;
 
     if (currentPage === 'noButton') {
-      subscription = accelerometer.subscribe(({ y }) => {
-        setRotation(y)
+      subscription = accelerometer.subscribe(({y}) => {
+        setRotation(y);
 
         if (y < -0.5 && directionalCommand !== 'goLeft') {
-          setDirectionalCommand(goLeft)
+          setDirectionalCommand(goLeft);
         } else if (y > 0.5 && directionalCommand !== 'goRight') {
-          setDirectionalCommand(goRight)
+          setDirectionalCommand(goRight);
         } else if (directionalCommand !== 'stopSteering') {
-          setDirectionalCommand(stopSteering)
+          setDirectionalCommand(stopSteering);
         }
-      })
+      });
     } else if (subscription) {
-      subscription.unsubscribe()
+      subscription.unsubscribe();
     }
 
     return () => {
       if (subscription) {
-        subscription.unsubscribe()
+        subscription.unsubscribe();
       }
-    }
-  }, [currentPage])
+    };
+  }, [currentPage]);
 
   function writeData(command: string) {
     BluetoothSerial.write(command).catch((err: any) => {
       Toast.show({
-        type: "error",
-        text1: "Dados não enviados",
-        text2: err
-      })
-    })
+        type: 'error',
+        text1: 'Dados não enviados',
+        text2: err,
+      });
+    });
   }
 
   useEffect(() => {
     if (command) {
-      writeData(command)
+      writeData(command);
     }
-  }, [command])
+  }, [command]);
 
   useEffect(() => {
     if (directionalCommand) {
-      writeData(directionalCommand)
+      writeData(directionalCommand);
     }
-  }, [directionalCommand])
+  }, [directionalCommand]);
 
   function renderCurrentPage() {
     switch (currentPage) {
@@ -136,7 +138,7 @@ export default function RemoteControl({ navigation, route }: any) {
             setCommand={setCommand}
             setDirectionalCommand={setDirectionalCommand}
           />
-        )
+        );
       }
       case 'noButton': {
         return (
@@ -150,11 +152,11 @@ export default function RemoteControl({ navigation, route }: any) {
             setArrowsIsOn={setArrowsIsOn}
             setCommand={setCommand}
           />
-        )
+        );
       }
 
       default: {
-        return <></>
+        return <></>;
       }
     }
   }
@@ -172,5 +174,5 @@ export default function RemoteControl({ navigation, route }: any) {
         setCurrentPage={setCurrentPage}
       />
     </Container>
-  )
+  );
 }

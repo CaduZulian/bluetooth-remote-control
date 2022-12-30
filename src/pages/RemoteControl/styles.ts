@@ -1,4 +1,4 @@
-import styled from "styled-components/native";
+import styled from 'styled-components/native';
 
 export const Container = styled.View`
   flex: 1;
@@ -41,14 +41,14 @@ export const DirectionContainer = styled.View`
   align-items: center;
   flex-direction: row;
   justify-content: space-between;
-`
+`;
 
 export const DirectionItem = styled.View`
   flex: 1;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-`
+`;
 
 export const DirectionButton = styled.TouchableHighlight`
   flex: 1;
@@ -56,5 +56,5 @@ export const DirectionButton = styled.TouchableHighlight`
   justify-content: center;
 
   height: 100%;
-  background-color: #DDDDDD;
-`
+  background-color: #dddddd;
+`;

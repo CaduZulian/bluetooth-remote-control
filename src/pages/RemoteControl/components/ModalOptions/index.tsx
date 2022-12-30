@@ -1,10 +1,10 @@
 import ReactNativeModal from 'react-native-modal';
 
 // icons
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 
 // native components
-import { View } from 'react-native'
+import {View} from 'react-native';
 
 // styled components
 import {
@@ -12,8 +12,8 @@ import {
   ModalContainer,
   ModalText,
   ModalTitle,
-  ModalView
-} from './styles'
+  ModalView,
+} from './styles';
 
 interface ModalOptionsProps {
   open: boolean;
@@ -22,19 +22,26 @@ interface ModalOptionsProps {
   setCurrentPage: (value: 'noButton' | 'button') => void;
 }
 
-export const ModalOptions: React.FC<ModalOptionsProps> = ({ open, onClose, currentPage, setCurrentPage }) => {
+export const ModalOptions: React.FC<ModalOptionsProps> = ({
+  open,
+  onClose,
+  currentPage,
+  setCurrentPage,
+}) => {
   return (
     <ReactNativeModal
       isVisible={open}
-      animationIn='fadeIn'
-      animationOut='fadeOut'
-    >
+      animationIn="fadeIn"
+      animationOut="fadeOut">
       <ModalContainer>
         <ModalView>
-          <View style={{ width: '100%', flexDirection: "row", justifyContent: 'space-between' }}>
-            <ModalTitle>
-              Interface de direção:
-            </ModalTitle>
+          <View
+            style={{
+              width: '100%',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <ModalTitle>Interface de direção:</ModalTitle>
 
             <SimpleLineIcons
               name="close"
@@ -46,57 +53,44 @@ export const ModalOptions: React.FC<ModalOptionsProps> = ({ open, onClose, curre
 
           <ModalButton
             activeOpacity={0.9}
-            underlayColor={currentPage === 'noButton' ?
-              "#040E79" :
-              "#8a8a8a"
-            }
+            underlayColor={currentPage === 'noButton' ? '#040E79' : '#8a8a8a'}
             style={{
               marginTop: 16,
-              backgroundColor: currentPage === 'noButton' ?
-                "#0614AE" :
-                "#afafaf"
+              backgroundColor:
+                currentPage === 'noButton' ? '#0614AE' : '#afafaf',
             }}
             onPress={() => {
-              setCurrentPage('noButton')
-              setTimeout(() => onClose(), 100)
-            }}
-          >
-            <ModalText style={{
-              color: currentPage === 'noButton' ?
-                "#fff" :
-                "#000"
+              setCurrentPage('noButton');
+              setTimeout(() => onClose(), 100);
             }}>
+            <ModalText
+              style={{
+                color: currentPage === 'noButton' ? '#fff' : '#000',
+              }}>
               Sem Botões
             </ModalText>
           </ModalButton>
 
           <ModalButton
             activeOpacity={0.9}
-            underlayColor={currentPage === 'button' ?
-              "#040E79" :
-              "#8a8a8a"
-            }
+            underlayColor={currentPage === 'button' ? '#040E79' : '#8a8a8a'}
             style={{
               marginTop: 8,
-              backgroundColor: currentPage === 'button' ?
-                "#0614AE" :
-                "#afafaf"
+              backgroundColor: currentPage === 'button' ? '#0614AE' : '#afafaf',
             }}
             onPress={() => {
-              setCurrentPage('button')
-              setTimeout(() => onClose(), 100)
-            }}
-          >
-            <ModalText style={{
-              color: currentPage === 'button' ?
-                "#fff" :
-                "#000"
+              setCurrentPage('button');
+              setTimeout(() => onClose(), 100);
             }}>
+            <ModalText
+              style={{
+                color: currentPage === 'button' ? '#fff' : '#000',
+              }}>
               Com Botões
             </ModalText>
           </ModalButton>
         </ModalView>
       </ModalContainer>
     </ReactNativeModal>
-  )
-}
+  );
+};

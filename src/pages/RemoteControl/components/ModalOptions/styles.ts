@@ -1,16 +1,16 @@
-import styled from "styled-components/native";
+import styled from 'styled-components/native';
 
 export const ModalContainer = styled.View`
   align-items: flex-end;
   flex: 1;
   margin-right: -5%;
   margin-top: -5%;
-  `
+`;
 
 export const ModalView = styled.View`
   width: 32%;
   background-color: #fff;
-  border: 1px solid #DDDDDD;
+  border: 1px solid #dddddd;
 
   border-radius: 4px;
 
@@ -19,12 +19,12 @@ export const ModalView = styled.View`
   padding: 12px;
 
   align-items: flex-start;
-`
+`;
 
 export const ModalTitle = styled.Text`
   font-size: 16px;
   color: #111;
-`
+`;
 
 export const ModalButton = styled.TouchableHighlight`
   width: 100%;
@@ -32,10 +32,10 @@ export const ModalButton = styled.TouchableHighlight`
 
   border-radius: 6px;
 
-  background-color: #DDDDDD;
-`
+  background-color: #dddddd;
+`;
 
 export const ModalText = styled.Text`
   font-size: 14px;
   color: #111;
-`
+`;

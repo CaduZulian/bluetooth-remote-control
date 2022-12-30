@@ -14,7 +14,8 @@ Repositório da aplicação **Mobile** do projeto **Bluetooth Remote Control**, 
 
 ##  Rodando o projeto
 
-Esse projeto utiliza o React-Native-CLI, então para inicializá-lo será necessário ter as configurações recomendadas. Caso não possua, basta clicar [aqui](https://reactnative.dev/docs/environment-setup) e seguir o passo a passo
+Esse projeto utiliza o React-Native-CLI, então para inicializá-lo será necessário ter as configurações recomendadas. 
+Caso não possua, basta clicar [aqui](https://reactnative.dev/docs/environment-setup) e seguir o passo a passo
 
 ```bash
 # Clone este repositório
@@ -53,7 +54,9 @@ $ cd .\android\app\build\outputs\apk\release
 
 ## TODO
 
-Esse projeto foi desenvolvido inteiramente com base no android, então não foram realizados testes nos dispositivos IOS e erros podem ser encontrados. Caso encontre erros, basta criar uma PR e ela será avaliada
+- Esse projeto foi desenvolvido inteiramente com base no android, então não foram realizados testes nos dispositivos IOS e erros podem ser encontrados. 
+Caso encontre erros, basta criar uma PR e ela será avaliada
+- No controle remoto, na opção 'Com Botões', os botões não são clicaveis ao mesmo tempo, sendo necessário soltar um botão para poder pressionar o outro. Caso consiga resolver esse problema, basta criar uma PR
 
 ## Desenvolvedores
 

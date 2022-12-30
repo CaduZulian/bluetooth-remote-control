@@ -1,8 +1,8 @@
 // icons
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 // native components
-import { View, Button } from 'react-native'
+import {View, Button} from 'react-native';
 
 // styled components
 import {
@@ -10,20 +10,20 @@ import {
   DirectionButton,
   DirectionContainer,
   RotationBar,
-  RotationPosition
-} from '../../styles'
+  RotationPosition,
+} from '../../styles';
 
-import { 
-  arrowsOff, 
-  arrowsOn, 
-  goBack, 
-  goForward, 
-  headlightOff, 
-  headlightOn, 
-  popupsOff, 
-  popupsOn, 
-  stop 
-} from '../../../../constants/commands'
+import {
+  arrowsOff,
+  arrowsOn,
+  goBack,
+  goForward,
+  headlightOff,
+  headlightOn,
+  popupsOff,
+  popupsOn,
+  stop,
+} from '../../../../constants/commands';
 
 interface NoButtonPageProps {
   rotation: number;
@@ -44,41 +44,44 @@ export const NoButtonPage: React.FC<NoButtonPageProps> = ({
   setPopupsHeadlightsIsOn,
   setHeadlightIsOn,
   setArrowsIsOn,
-  setCommand
+  setCommand,
 }) => {
   return (
     <>
-      <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center' }}>
+      <View
+        style={{width: '100%', alignItems: 'center', justifyContent: 'center'}}>
         <RotationBar>
-          <RotationPosition style={{ backgroundColor: '#ff0000', position: 'absolute' }} />
-          <RotationPosition style={{ marginLeft: `${rotation * 10}%` }} />
+          <RotationPosition
+            style={{backgroundColor: '#ff0000', position: 'absolute'}}
+          />
+          <RotationPosition style={{marginLeft: `${rotation * 10}%`}} />
         </RotationBar>
 
         <ButtonsGroup>
           <Button
-            color={popupsHeadlightsIsOn ? "#0614AE" : "#afafaf"}
+            color={popupsHeadlightsIsOn ? '#0614AE' : '#afafaf'}
             title="Popups"
             onPress={() => {
-              setPopupsHeadlightsIsOn(!popupsHeadlightsIsOn)
-              setCommand(!popupsHeadlightsIsOn ? popupsOn : popupsOff)
+              setPopupsHeadlightsIsOn(!popupsHeadlightsIsOn);
+              setCommand(!popupsHeadlightsIsOn ? popupsOn : popupsOff);
             }}
           />
 
           <Button
-            color={headlightIsOn ? "#0614AE" : "#afafaf"}
+            color={headlightIsOn ? '#0614AE' : '#afafaf'}
             title="Luzes"
             onPress={() => {
-              setHeadlightIsOn(!headlightIsOn)
-              setCommand(!headlightIsOn ? headlightOn : headlightOff)
+              setHeadlightIsOn(!headlightIsOn);
+              setCommand(!headlightIsOn ? headlightOn : headlightOff);
             }}
           />
 
           <Button
-            color={arrowsIsOn ? "#0614AE" : "#afafaf"}
+            color={arrowsIsOn ? '#0614AE' : '#afafaf'}
             title="Lanternas"
             onPress={() => {
-              setArrowsIsOn(!arrowsIsOn)
-              setCommand(!arrowsIsOn ? arrowsOn : arrowsOff)
+              setArrowsIsOn(!arrowsIsOn);
+              setCommand(!arrowsIsOn ? arrowsOn : arrowsOff);
             }}
           />
         </ButtonsGroup>
@@ -86,22 +89,20 @@ export const NoButtonPage: React.FC<NoButtonPageProps> = ({
 
       <DirectionContainer>
         <DirectionButton
-          style={{ marginRight: 32 }}
-          underlayColor='#B0B0B0'
+          style={{marginRight: 32}}
+          underlayColor="#B0B0B0"
           onPress={() => setCommand(stop)}
-          onShowUnderlay={() => setCommand(goForward)}
-        >
+          onShowUnderlay={() => setCommand(goForward)}>
           <MaterialIcons name="arrow-drop-up" size={30} />
         </DirectionButton>
 
         <DirectionButton
-          underlayColor='#B0B0B0'
+          underlayColor="#B0B0B0"
           onPress={() => setCommand(stop)}
-          onShowUnderlay={() => setCommand(goBack)}
-        >
+          onShowUnderlay={() => setCommand(goBack)}>
           <MaterialIcons name="arrow-drop-down" size={30} />
         </DirectionButton>
       </DirectionContainer>
     </>
-  )
-}
+  );
+};
