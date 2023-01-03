@@ -10,6 +10,7 @@ import {
   DirectionButton,
   DirectionContainer,
   DirectionItem,
+  StartButton,
 } from '../../styles';
 
 import {
@@ -21,6 +22,8 @@ import {
   goRight,
   headlightOff,
   headlightOn,
+  motorsOff,
+  motorsOn,
   popupsOff,
   popupsOn,
   stop,
@@ -28,9 +31,11 @@ import {
 } from '../../../../constants/commands';
 
 interface ButtonPageProps {
+  motorsIsOn: boolean;
   popupsHeadlightsIsOn: boolean;
   headlightIsOn: boolean;
   arrowsIsOn: boolean;
+  setMotorsIsOn: (value: boolean) => void;
   setPopupsHeadlightsIsOn: (value: boolean) => void;
   setHeadlightIsOn: (value: boolean) => void;
   setArrowsIsOn: (value: boolean) => void;
@@ -39,9 +44,11 @@ interface ButtonPageProps {
 }
 
 export const ButtonPage: React.FC<ButtonPageProps> = ({
+  motorsIsOn,
   popupsHeadlightsIsOn,
   headlightIsOn,
   arrowsIsOn,
+  setMotorsIsOn,
   setPopupsHeadlightsIsOn,
   setHeadlightIsOn,
   setArrowsIsOn,
@@ -53,6 +60,19 @@ export const ButtonPage: React.FC<ButtonPageProps> = ({
       <View
         style={{width: '100%', alignItems: 'center', justifyContent: 'center'}}>
         <ButtonsGroup>
+          <StartButton
+            style={{backgroundColor: motorsIsOn ? '#0614AE' : '#afafaf'}}
+            onPress={() => {
+              setMotorsIsOn(!motorsIsOn);
+              setCommand(!popupsHeadlightsIsOn ? motorsOn : motorsOff);
+            }}>
+            <MaterialIcons
+              name="power-settings-new"
+              size={25}
+              color="#FFFFFF"
+            />
+          </StartButton>
+
           <Button
             color={popupsHeadlightsIsOn ? '#0614AE' : '#afafaf'}
             title="Popups"

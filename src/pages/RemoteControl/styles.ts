@@ -1,3 +1,4 @@
+import {Pressable} from 'react-native';
 import styled from 'styled-components/native';
 
 export const Container = styled.View`
@@ -30,8 +31,9 @@ export const RotationPosition = styled.View`
 
 export const ButtonsGroup = styled.View`
   flex-direction: row;
+  align-items: center;
   justify-content: space-between;
-  min-width: 250px;
+  min-width: 300px;
 
   margin-bottom: 32px;
 `;
@@ -57,4 +59,12 @@ export const DirectionButton = styled.TouchableHighlight`
 
   height: 100%;
   background-color: #dddddd;
+`;
+
+export const StartButton = styled(Pressable)`
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 35px;
 `;

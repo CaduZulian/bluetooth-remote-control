@@ -13,3 +13,7 @@ export const headlightOn = 'H'
 export const headlightOff = 'h'
 export const arrowsOn = 'A'
 export const arrowsOff = 'a'
+
+// motors commands
+export const motorsOn = 'M'
+export const motorsOff = 'm'

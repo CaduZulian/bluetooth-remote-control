@@ -11,6 +11,7 @@ import {
   DirectionContainer,
   RotationBar,
   RotationPosition,
+  StartButton,
 } from '../../styles';
 
 import {
@@ -20,6 +21,8 @@ import {
   goForward,
   headlightOff,
   headlightOn,
+  motorsOff,
+  motorsOn,
   popupsOff,
   popupsOn,
   stop,
@@ -27,9 +30,11 @@ import {
 
 interface NoButtonPageProps {
   rotation: number;
+  motorsIsOn: boolean;
   popupsHeadlightsIsOn: boolean;
   headlightIsOn: boolean;
   arrowsIsOn: boolean;
+  setMotorsIsOn: (value: boolean) => void;
   setPopupsHeadlightsIsOn: (value: boolean) => void;
   setHeadlightIsOn: (value: boolean) => void;
   setArrowsIsOn: (value: boolean) => void;
@@ -38,9 +43,11 @@ interface NoButtonPageProps {
 
 export const NoButtonPage: React.FC<NoButtonPageProps> = ({
   rotation,
+  motorsIsOn,
   popupsHeadlightsIsOn,
   headlightIsOn,
   arrowsIsOn,
+  setMotorsIsOn,
   setPopupsHeadlightsIsOn,
   setHeadlightIsOn,
   setArrowsIsOn,
@@ -58,6 +65,19 @@ export const NoButtonPage: React.FC<NoButtonPageProps> = ({
         </RotationBar>
 
         <ButtonsGroup>
+          <StartButton
+            style={{backgroundColor: motorsIsOn ? '#0614AE' : '#afafaf'}}
+            onPress={() => {
+              setMotorsIsOn(!motorsIsOn);
+              setCommand(!popupsHeadlightsIsOn ? motorsOn : motorsOff);
+            }}>
+            <MaterialIcons
+              name="power-settings-new"
+              size={25}
+              color="#FFFFFF"
+            />
+          </StartButton>
+
           <Button
             color={popupsHeadlightsIsOn ? '#0614AE' : '#afafaf'}
             title="Popups"

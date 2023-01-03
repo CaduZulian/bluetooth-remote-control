@@ -37,6 +37,7 @@ export default function RemoteControl({navigation, route}: any) {
     'noButton',
   );
 
+  const [motorsIsOn, setMotorsIsOn] = useState(false);
   const [popupsHeadlightsIsOn, setPopupsHeadlightsIsOn] = useState(false);
   const [headlightIsOn, setHeadlightIsOn] = useState(false);
   const [arrowsIsOn, setArrowsIsOn] = useState(false);
@@ -61,9 +62,9 @@ export default function RemoteControl({navigation, route}: any) {
 
   useEffect(() => {
     BluetoothSerial.isConnected().then((result: boolean) => {
-      if (!result) {
-        navigation.goBack()
-      }
+      // if (!result) {
+      //   navigation.goBack();
+      // }
     });
 
     return () => {
@@ -129,9 +130,11 @@ export default function RemoteControl({navigation, route}: any) {
       case 'button': {
         return (
           <ButtonPage
+            motorsIsOn={motorsIsOn}
             popupsHeadlightsIsOn={popupsHeadlightsIsOn}
             headlightIsOn={headlightIsOn}
             arrowsIsOn={arrowsIsOn}
+            setMotorsIsOn={setMotorsIsOn}
             setPopupsHeadlightsIsOn={setPopupsHeadlightsIsOn}
             setHeadlightIsOn={setHeadlightIsOn}
             setArrowsIsOn={setArrowsIsOn}
@@ -144,9 +147,11 @@ export default function RemoteControl({navigation, route}: any) {
         return (
           <NoButtonPage
             rotation={rotation}
+            motorsIsOn={motorsIsOn}
             popupsHeadlightsIsOn={popupsHeadlightsIsOn}
             headlightIsOn={headlightIsOn}
             arrowsIsOn={arrowsIsOn}
+            setMotorsIsOn={setMotorsIsOn}
             setPopupsHeadlightsIsOn={setPopupsHeadlightsIsOn}
             setHeadlightIsOn={setHeadlightIsOn}
             setArrowsIsOn={setArrowsIsOn}
