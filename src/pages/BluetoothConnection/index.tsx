@@ -49,7 +49,12 @@ export default function BluetoothConnections({navigation}: any) {
 
   useEffect(() => {
     if (bluetoothIsOff) {
-      BluetoothSerial.requestEnable();
+      // BluetoothSerial.requestEnable();
+      Toast.show({
+        type: 'success',
+        text1: 'Bluetooth desligado',
+        text2: 'Ative o bluetooth para poder usar o app',
+      });
     }
   }, [bluetoothIsOff]);
 
@@ -90,28 +95,38 @@ export default function BluetoothConnections({navigation}: any) {
     }
   }
 
-  const checkForBluetoothPermission = () => {
+  const checkForBluetoothPermission = async () => {
     if (Platform.OS === 'android' && Platform.Version >= 23) {
       let finalPermission =
         Platform.Version >= 29
           ? PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
           : PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION;
-      PermissionsAndroid.check(finalPermission).then(result => {
-        if (result) {
-          BluetoothIsEnabled();
-        } else {
-          PermissionsAndroid.request(finalPermission).then(result => {
-            if (result === PermissionsAndroid.RESULTS.GRANTED) {
-              BluetoothIsEnabled();
-            } else {
-              Toast.show({
-                type: 'error',
-                text1: 'Não foi possível iniciar o bluetooth',
-                text2: 'Verifique as permissões do app e tente novamente',
-              });
-            }
-          });
-        }
+
+      let permissions = [
+        finalPermission,
+        PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+        PermissionsAndroid.PERMISSIONS.BLUETOOTH_ADVERTISE,
+        PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+      ];
+
+      permissions.forEach(permission => {
+        PermissionsAndroid.check(permission).then(result => {
+          if (result) {
+            BluetoothIsEnabled();
+          } else {
+            PermissionsAndroid.request(permission).then(result => {
+              if (result === PermissionsAndroid.RESULTS.GRANTED) {
+                BluetoothIsEnabled();
+              } else {
+                Toast.show({
+                  type: 'error',
+                  text1: 'Não foi possível iniciar o bluetooth',
+                  text2: 'Verifique as permissões do app e tente novamente',
+                });
+              }
+            });
+          }
+        });
       });
     }
   };
