@@ -52,13 +52,13 @@ export const DirectionItem = styled.View`
   justify-content: space-between;
 `;
 
-export const DirectionButton = styled.TouchableHighlight`
+export const DirectionButton = styled.View<{onPress: boolean}>`
   flex: 1;
   align-items: center;
   justify-content: center;
 
   height: 100%;
-  background-color: #dddddd;
+  background-color: ${({onPress}) => onPress ? '#B0B0B0' : '#dddddd'};
 `;
 
 export const StartButton = styled(Pressable)`

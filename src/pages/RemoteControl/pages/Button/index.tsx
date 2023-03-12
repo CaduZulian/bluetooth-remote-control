@@ -1,17 +1,4 @@
-// icons
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-
-// native components
-import {View, Button} from 'react-native';
-
-// styled components
-import {
-  ButtonsGroup,
-  DirectionButton,
-  DirectionContainer,
-  DirectionItem,
-  StartButton,
-} from '../../styles';
+import {useEffect, useRef, useState} from 'react';
 
 import {
   arrowsOff,
@@ -30,18 +17,28 @@ import {
   stopSteering,
 } from '../../../../constants/commands';
 
-interface ButtonPageProps {
-  motorsIsOn: boolean;
-  popupsHeadlightsIsOn: boolean;
-  headlightIsOn: boolean;
-  arrowsIsOn: boolean;
-  setMotorsIsOn: (value: boolean) => void;
-  setPopupsHeadlightsIsOn: (value: boolean) => void;
-  setHeadlightIsOn: (value: boolean) => void;
-  setArrowsIsOn: (value: boolean) => void;
-  setCommand: (value: string) => void;
-  setDirectionalCommand: (value: string) => void;
-}
+// icons
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
+// native components
+import {
+  View,
+  Button,
+  TouchableHighlight,
+  GestureResponderEvent,
+} from 'react-native';
+
+// models
+import {ButtonPageProps, IButtonsActions} from '../../models';
+
+// styled components
+import {
+  ButtonsGroup,
+  DirectionButton,
+  DirectionContainer,
+  DirectionItem,
+  StartButton,
+} from '../../styles';
 
 export const ButtonPage: React.FC<ButtonPageProps> = ({
   motorsIsOn,
@@ -55,6 +52,110 @@ export const ButtonPage: React.FC<ButtonPageProps> = ({
   setCommand,
   setDirectionalCommand,
 }) => {
+  const buttonUpRef = useRef<TouchableHighlight>(null);
+  const buttonDownRef = useRef<TouchableHighlight>(null);
+  const buttonLeftRef = useRef<TouchableHighlight>(null);
+  const buttonRightRef = useRef<TouchableHighlight>(null);
+
+  const [buttonsActions, setButtonsActions] = useState<IButtonsActions>({});
+  const [activeButtons, setActiveButtons] = useState<string[]>([]);
+
+  const autoFillButtonsActions = (
+    ref: React.RefObject<TouchableHighlight>,
+    key: string,
+    onPressIn: () => void,
+    onPressOut: () => void,
+  ) => {
+    ref.current?.measure((fx, fy, width, height, px, py) => {
+      setButtonsActions(oldData => {
+        return {
+          ...oldData,
+          [key]: {
+            pageX: px,
+            pageY: py,
+            width: width,
+            height: height,
+            onPressIn: onPressIn,
+            onPressOut: onPressOut,
+          },
+        };
+      });
+    });
+  };
+
+  const handlePress = (event: GestureResponderEvent) => {
+    console.log('handlePress');
+    Object.entries(buttonsActions).forEach(
+      ([key, {pageX, pageY, width, height, onPressIn}]) => {
+        if (
+          event.nativeEvent.pageX > pageX &&
+          event.nativeEvent.pageX < pageX + width &&
+          event.nativeEvent.pageY > pageY &&
+          event.nativeEvent.pageY < pageY + height
+        ) {
+          onPressIn();
+          setActiveButtons(oldData => {
+            return !oldData.includes(key) ? [...oldData, key] : oldData;
+          });
+        }
+      },
+    );
+  };
+
+  const handleRelease = (event: GestureResponderEvent) => {
+    console.log('handleRelease');
+    Object.entries(buttonsActions).forEach(
+      ([key, {pageX, pageY, width, height, onPressOut}]) => {
+        if (
+          event.nativeEvent.pageX > pageX &&
+          event.nativeEvent.pageX < pageX + width &&
+          event.nativeEvent.pageY > pageY &&
+          event.nativeEvent.pageY < pageY + height
+        ) {
+          onPressOut();
+          setActiveButtons(oldData => oldData.filter(item => item !== key));
+        }
+      },
+    );
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (buttonUpRef.current) {
+        autoFillButtonsActions(
+          buttonUpRef,
+          'up',
+          () => setCommand(goForward),
+          () => setCommand(stop),
+        );
+      }
+      if (buttonDownRef.current) {
+        autoFillButtonsActions(
+          buttonDownRef,
+          'down',
+          () => setCommand(goBack),
+          () => setCommand(stop),
+        );
+      }
+      if (buttonLeftRef.current) {
+        autoFillButtonsActions(
+          buttonLeftRef,
+          'left',
+          () => setDirectionalCommand(goLeft),
+          () => setDirectionalCommand(stopSteering),
+        );
+      }
+      if (buttonRightRef.current) {
+        autoFillButtonsActions(
+          buttonRightRef,
+          'right',
+          () => setDirectionalCommand(goRight),
+          () => setDirectionalCommand(stopSteering),
+        );
+      }
+    }, 1);
+  }, [buttonUpRef, buttonDownRef, buttonLeftRef, buttonRightRef]);
+
   return (
     <>
       <View
@@ -105,18 +206,30 @@ export const ButtonPage: React.FC<ButtonPageProps> = ({
       <DirectionContainer>
         <DirectionItem>
           <DirectionButton
+            onPress={activeButtons.includes('up')}
+            ref={buttonUpRef}
             style={{width: '100%', height: '100%', marginBottom: 16}}
-            underlayColor="#B0B0B0"
-            onPressIn={() => setCommand(goForward)}
-            onPressOut={() => setCommand(stop)}>
+            onStartShouldSetResponder={() => true}
+            onResponderStart={event => {
+              handlePress(event);
+            }}
+            onResponderEnd={event => {
+              handleRelease(event);
+            }}>
             <MaterialIcons name="arrow-drop-up" size={30} />
           </DirectionButton>
 
           <DirectionButton
+            onPress={activeButtons.includes('down')}
+            ref={buttonDownRef}
             style={{width: '100%', height: '100%'}}
-            underlayColor="#B0B0B0"
-            onPressOut={() => setCommand(stop)}
-            onPressIn={() => setCommand(goBack)}>
+            onStartShouldSetResponder={() => true}
+            onResponderStart={event => {
+              handlePress(event);
+            }}
+            onResponderEnd={event => {
+              handleRelease(event);
+            }}>
             <MaterialIcons name="arrow-drop-down" size={30} />
           </DirectionButton>
         </DirectionItem>
@@ -124,18 +237,30 @@ export const ButtonPage: React.FC<ButtonPageProps> = ({
         <DirectionItem
           style={{marginLeft: 32, flexDirection: 'row', height: '100%'}}>
           <DirectionButton
+            onPress={activeButtons.includes('left')}
+            ref={buttonLeftRef}
             style={{height: '60%', marginRight: 16}}
-            underlayColor="#B0B0B0"
-            onPressOut={() => setDirectionalCommand(stopSteering)}
-            onPressIn={() => setDirectionalCommand(goLeft)}>
+            onStartShouldSetResponder={() => true}
+            onResponderStart={event => {
+              handlePress(event);
+            }}
+            onResponderEnd={event => {
+              handleRelease(event);
+            }}>
             <MaterialIcons name="arrow-left" size={30} />
           </DirectionButton>
 
           <DirectionButton
+            onPress={activeButtons.includes('right')}
+            ref={buttonRightRef}
             style={{height: '60%'}}
-            underlayColor="#B0B0B0"
-            onPressOut={() => setDirectionalCommand(stopSteering)}
-            onPressIn={() => setDirectionalCommand(goRight)}>
+            onStartShouldSetResponder={() => true}
+            onResponderStart={event => {
+              handlePress(event);
+            }}
+            onResponderEnd={event => {
+              handleRelease(event);
+            }}>
             <MaterialIcons name="arrow-right" size={30} />
           </DirectionButton>
         </DirectionItem>
