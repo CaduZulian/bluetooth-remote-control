@@ -2,6 +2,10 @@
 
 Repositório da aplicação **Mobile** do projeto **Bluetooth Remote Control**, desenvolvido de nov/2021 a jan/2023, para a criação de um Toyota Trueno (AE86), baseado no anime InitialD, de controle remoto 
 
+<div align="center">
+<img src=".github\project-image.png" alt="Bluetooth Remote Control"/><br />
+</div>
+
 ## Bibliotecas utilizadas
 
 - **[NodeJS](https://nodejs.org/en/)**
